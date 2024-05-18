@@ -1,0 +1,36 @@
+import pyaudio
+from pocketsphinx import LiveSpeech
+
+# Set up the PocketSphinx live speech recognizer
+speech = LiveSpeech(
+    verbose=False,
+    sampling_rate=16000,
+    buffer_size=2048,
+    no_search=False,
+    full_utt=False,
+)
+
+# Initialize the PyAudio stream
+p = pyaudio.PyAudio()
+stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=2048)
+stream.start_stream()
+
+print("Listening...")
+
+try:
+    while True:
+        # Read data from the microphone
+        data = stream.read(2048, exception_on_overflow=False)
+
+        # Feed data to PocketSphinx for processing
+        speech.process_raw(data, False, False)
+        
+        # Retrieve hypothesis (recognized text)
+        for phrase in speech:
+            print(f"Recognized: {phrase}")
+except KeyboardInterrupt:
+    print("Stopping...")
+
+stream.stop_stream()
+stream.close()
+p.terminate()
