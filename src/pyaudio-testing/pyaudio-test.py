@@ -7,6 +7,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
+VOLUME_THRESHOLD = 100000
 
 # Initialize PyAudio
 p = pyaudio.PyAudio()
@@ -21,36 +22,34 @@ stream = p.open(format=FORMAT,
 print("Recording...")
 
 # Record data for a set duration
-duration = 5  # seconds
 frames = []
 
-for _ in range(0, int(RATE / CHUNK * duration)):
-    data = stream.read(CHUNK)
-    frames.append(np.frombuffer(data, dtype=np.int16))
+while True:
+    for _ in range(0, int(RATE / CHUNK)):
+        data = stream.read(CHUNK)
+        frames.append(np.frombuffer(data, dtype=np.int16))
 
-print("Recording finished.")
+    print("Recording finished.")
 
-# Stop and close the stream
-stream.stop_stream()
-stream.close()
-p.terminate()
+    audio_data = np.hstack(frames)
+    volume = np.linalg.norm(audio_data)
 
-# Convert the list of frames into a NumPy array
-audio_data = np.hstack(frames)
+    if volume > VOLUME_THRESHOLD:
+        print("Sound detected.")
+    else:
+        print("No sound detected.")
+        continue
 
-# Apply FFT
-fft_result = np.fft.fft(audio_data)
+    fft_result = np.fft.fft(audio_data)
+    frequencies = np.fft.fftfreq(len(fft_result), 1.0 / RATE)
 
-# Get the corresponding frequencies
-frequencies = np.fft.fftfreq(len(fft_result), 1.0 / RATE)
+    # Only take the positive part of the spectrum
+    positive_freqs = frequencies[:len(frequencies)//2]
+    positive_fft = np.abs(fft_result[:len(fft_result)//2])
 
-# Only take the positive part of the spectrum
-positive_freqs = frequencies[:len(frequencies)//2]
-positive_fft = np.abs(fft_result[:len(fft_result)//2])
+    positive_freqs_sorted = np.argsort(positive_fft)
 
-# Plot the results
-plt.plot(positive_freqs, positive_fft)
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Amplitude')
-plt.title('Frequency Spectrum')
-plt.show()
+    for i in range(1, 4):
+        print("The ", i, "th loudest frequency is: ", positive_freqs[positive_freqs_sorted[-i]], "Hz")
+    print("\n")
+    frames=[]
