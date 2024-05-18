@@ -1,0 +1,51 @@
+import pyaudio
+import wave
+
+import whisper   
+import numpy as np
+
+# Initialize Whisper model
+model = whisper.load_model("base")
+
+# Parameters for PyAudio
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 16000
+CHUNK = 1024
+RECORD_SECONDS = 5
+
+# Initialize PyAudio
+audio = pyaudio.PyAudio()
+
+# Open stream
+stream = audio.open(format=FORMAT, channels=CHANNELS,
+                    rate=RATE, input=True,
+                    frames_per_buffer=CHUNK)
+
+print("Listening...")
+
+try:
+    while True:
+        frames = []
+
+        # Capture audio in chunks
+        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+            data = stream.read(CHUNK)
+            frames.append(data)
+
+        # Convert audio chunks to a numpy array
+        audio_data = np.frombuffer(b''.join(frames), dtype=np.int16)
+
+        # Perform speech recognition
+        result = model.transcribe(audio_data)
+
+        # Print transcription
+        print(f"Recognized: {result['text']}")
+
+except KeyboardInterrupt:
+    print("Stopping...")
+
+# Stop and close the stream
+stream.stop_stream()
+stream.close()
+audio.terminate()
