@@ -10,10 +10,9 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-VOLUME_THRESHOLD = 60  # in dB
+VOLUME_THRESHOLD = 40  # in dB
 
 p = pyaudio.PyAudio()
-
 
 def stream_callback(in_data, frame_count, time_info, status):
     frames.append(np.frombuffer(in_data, dtype=np.int16))
@@ -26,7 +25,6 @@ stream = p.open(format=FORMAT,
                 input=True,
                 frames_per_buffer=CHUNK,
                 stream_callback=stream_callback)
-
 
 @dataclass
 class Note:
@@ -60,20 +58,15 @@ def freq_to_note(freq) -> Note:
 
 frames = []
 
-return_data = None
-
-def listener() -> Optional[AudioData]:
+def sound_picker() -> Optional[AudioData]:
     if (len(frames) < RATE/CHUNK):
-        return return_data
+        return None
     
     audio = np.hstack(frames)
     volume = math.log10(np.linalg.norm(audio)) * 10
     
     fft_result = np.fft.fft(audio)
     frequencies = np.fft.fftfreq(len(fft_result), 1.0 / RATE)
-
-    if not volume > VOLUME_THRESHOLD:
-        return None
     
     # Only take the positive part of the spectrum
     positive_freqs = frequencies[:len(frequencies)//2]
@@ -85,17 +78,26 @@ def listener() -> Optional[AudioData]:
     #     print("The ", i, "th loudest frequency is: ", positive_freqs[positive_freqs_sorted[-i]], "Hz")
     
     # Grabbing the fundamental frequency, the lowest note out of the top three loudest frequencies
-    loudest_freq = [positive_freqs[positive_freqs_sorted[-i]] for i in range(1, 4)]
+    loudest_freq = [positive_freqs[positive_freqs_sorted[-i]] for i in range(1, 5)]
     fundemental_freq = min(loudest_freq)
 
 
     note: Note = freq_to_note(fundemental_freq)
     
-    # return_data = AudioData(volume, note)
     frames.clear()
 
     return AudioData(volume, note)
 
-while True:
-    return_data = listener()
-    print(return_data)
+def listener():
+    global return_data
+    while True:
+        return_data = sound_picker()
+        if return_data:
+            print(return_data)
+
+import multiprocessing
+
+if __name__ == "__main__":
+    print("Starting listener")
+    listen = multiprocessing.Process(target=listener)
+    listen.start()
