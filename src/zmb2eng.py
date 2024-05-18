@@ -10,22 +10,29 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-VOLUME_THRESHOLD = 40 # in dB
+VOLUME_THRESHOLD = 60  # in dB
 
 p = pyaudio.PyAudio()
+
+
+def stream_callback(in_data, frame_count, time_info, status):
+    frames.append(np.frombuffer(in_data, dtype=np.int16))
+    return (in_data, pyaudio.paContinue)
 
 # Open a stream with the above parameters
 stream = p.open(format=FORMAT,
                 channels=CHANNELS,
                 rate=RATE,
                 input=True,
-                frames_per_buffer=CHUNK)
+                frames_per_buffer=CHUNK,
+                stream_callback=stream_callback)
 
 
 @dataclass
 class Note:
     name: str
     octave: int
+    freq: float
 
 @dataclass
 class AudioData:
@@ -33,7 +40,7 @@ class AudioData:
     note: Note
 
     def __str__(self):
-        return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}"
+        return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}: {self.note.freq}Hz"
 
 def freq_to_note(freq) -> Note:
     notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
@@ -48,13 +55,16 @@ def freq_to_note(freq) -> Note:
     
     if note == 'A#' or note == 'C#' or note == 'D#' or note == 'F#' or note == 'G#':
         note = notes[note_index - 1]
-    return Note(note, octave)
+    
+    return Note(note, octave, freq)
+
+frames = []
+
+return_data = None
 
 def listener() -> Optional[AudioData]:
-    frames = []
-    for _ in range(0, int(RATE / CHUNK)):
-        data = stream.read(CHUNK)
-        frames.append(np.frombuffer(data, dtype=np.int16))
+    if (len(frames) < RATE/CHUNK):
+        return return_data
     
     audio = np.hstack(frames)
     volume = math.log10(np.linalg.norm(audio)) * 10
@@ -73,9 +83,19 @@ def listener() -> Optional[AudioData]:
 
     # for i in range(1, 4):
     #     print("The ", i, "th loudest frequency is: ", positive_freqs[positive_freqs_sorted[-i]], "Hz")
+    
+    # Grabbing the fundamental frequency, the lowest note out of the top three loudest frequencies
+    loudest_freq = [positive_freqs[positive_freqs_sorted[-i]] for i in range(1, 4)]
+    fundemental_freq = min(loudest_freq)
 
-    note: Note = freq_to_note(positive_freqs[positive_freqs_sorted[-1]])
 
-    return_data = AudioData(volume, note)
+    note: Note = freq_to_note(fundemental_freq)
+    
+    # return_data = AudioData(volume, note)
+    frames.clear()
 
-    return return_data
+    return AudioData(volume, note)
+
+while True:
+    return_data = listener()
+    print(return_data)
