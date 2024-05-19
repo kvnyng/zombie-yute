@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 import os
 from .datatypes.lexicon import *
 
+
+ZombieNotes = []  # Define ZombieNotes list in a global scope
 def toronto_conversion():
-    ZombieNotes = []
     try:
         ZombieNotes.append(OpenersReverse()[toronto_text[0]])
     except KeyError:
@@ -30,7 +31,7 @@ def toronto_conversion():
     except KeyError:
         ZombieNotes.append(ClosersReverse()["clapped"])
     print(ZombieNotes,"This is Zombie Notes")
-ZombieNotes = []  # Define ZombieNotes list in a global scope
+# ZombieNotes = []  # Define ZombieNotes list in a global scope
 
         
 
@@ -112,10 +113,22 @@ try:
         toronto_text = response.choices[0].message.content
         print(toronto_text)
         toronto_conversion()
+        print("Zombie Text: ", ZombieNotes)
+        print(ZombieNotes[0])
+        # Play Audio
+        from playsound import playsound
+        playsound('data/a3.mp3')
+        playsound(ZombieNotes[0])
+        playsound(ZombieNotes[1])
+        playsound(ZombieNotes[2])
+        playsound(ZombieNotes[3])  
+        playsound(ZombieNotes[4])
+
         break
+    
 
 
-        # Sleep for a while to simulate real-time processing (optional)
+            # Sleep for a while to simulate real-time processing (optional)
         # time.sleep(BUFFER_SIZE_SECONDS)
 
 except KeyboardInterrupt:
