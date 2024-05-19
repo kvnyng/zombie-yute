@@ -113,7 +113,7 @@ class Subjects(WordToPitch):
         )
 
 class Verbs(WordToPitch):
-    def __int__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.update(
             WordToPitch({
