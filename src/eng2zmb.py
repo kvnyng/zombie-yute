@@ -1,10 +1,11 @@
+import random
 import pyaudio
 import numpy as np
 import whisper
-import torch
-import time
-from dotenv import load_dotenv
-import os
+# import torch
+# import time
+# from dotenv import load_dotenv
+# import os
 from .datatypes.lexicon import *
 
 print("\033[H\033[J", end="")
@@ -26,21 +27,29 @@ def string_to_list(input_string):
 
 ZombieNotes = []  # Define ZombieNotes list in a global scope
 def toronto_conversion():
+    word = ""
 #    print(toronto_text[0])
     for i in range(len(toronto_text)):
         if toronto_text[i] in list(OpenersReverse().keys()):
+            word = OpenersReverse()[toronto_text[i]]
             ZombieNotes.append(OpenersReverse()[toronto_text[i]])
         elif toronto_text[i] in SubjectsReverse().keys():
+            word = SubjectsReverse()[toronto_text[i]]
             ZombieNotes.append(SubjectsReverse()[toronto_text[i]])
         elif toronto_text[i] in VerbsReverse().keys():
+            word = VerbsReverse()[toronto_text[i]]
             ZombieNotes.append(VerbsReverse()[toronto_text[i]])
         elif toronto_text[i] in ObjectsReverse().keys():
+            word = ObjectsReverse()[toronto_text[i]]
             ZombieNotes.append(ObjectsReverse()[toronto_text[i]])
         elif toronto_text[i] in ClosersReverse().keys():
+            word = ClosersReverse()[toronto_text[i]]
             ZombieNotes.append(ClosersReverse()[toronto_text[i]])
         else:
-            print("Error: Word not found in dictionary, utilizing placeholder!")
-            ZombieNotes.append(OpenersReverse()["whazzgood"])
+            # print("Error: Word not found in dictionary, utilizing placeholder!")
+            word = random.choice(list(OpenersReverse().values()))
+            ZombieNotes.append(random.choice(list(OpenersReverse().values())))
+        # print(word)
 #    print(toronto_text)
 # ZombieNotes = []  # Define ZombieNotes list in a global scope
 
@@ -55,7 +64,7 @@ CHANNELS = 1              # Number of channels (mono)
 RATE = 16000              # Sampling rate (16 kHz for Whisper compatibility)
 CHUNK = 1024              # Number of frames per buffer
 CHUNKS_PER_SECOND = RATE // CHUNK
-BUFFER_SIZE_SECONDS = 10
+BUFFER_SIZE_SECONDS = 5
 BUFFER_SIZE = CHUNKS_PER_SECOND * BUFFER_SIZE_SECONDS
 
 # Initialize PyAudio
@@ -92,7 +101,7 @@ try:
 
         # Print the transcribed text
         from openai import OpenAI
-        load_dotenv()
+        # load_dotenv()
         client = OpenAI(api_key="56SIJW3HWYD8YZNJYRMKB7N1372RX70WPVQ7O11U18HZCJEW1VL4RORMYTTPY5YD",base_url="https://jamsapi.hackclub.dev/openai/")
         response = client.chat.completions.create(
         model="gpt-4o",
@@ -137,6 +146,7 @@ try:
         # Play Audio
         from playsound import playsound
         
+        print("Zombie Translation Playing Now")
         playsound(ZombieNotes[0])
         playsound(ZombieNotes[1])
         playsound(ZombieNotes[2])

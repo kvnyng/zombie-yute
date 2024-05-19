@@ -80,13 +80,15 @@ def sound_picker() -> Optional[AudioData]:
     
     frames.clear()
 
+    print("Volume: ", volume, "Note: ", note)
+
     return AudioData(volume, note)
 
 def listener(results_queue: Queue, communication_queue: Optional[Queue] = None):
     history: list[AudioData] = [None] * 10
     previous: Optional[AudioData] = None
 
-    triggered: bool = True
+    triggered: bool = False
     # sentence: Queue[AudioData] = []
 
     while True:
@@ -94,6 +96,7 @@ def listener(results_queue: Queue, communication_queue: Optional[Queue] = None):
             history.pop(0)
 
         current = sound_picker()
+        # print("Volume: ", current.volume if current else None, "Note: ", current.note if current else None)
         # print(current.volume if current else None)
         # print(history, str(previous), str(current))
 
@@ -108,16 +111,16 @@ def listener(results_queue: Queue, communication_queue: Optional[Queue] = None):
             previous = None
             continue
 
-        if triggered:
-            word = Lexicon()[intToGrammar()[results_queue.qsize()]].get(current.note)
-            if not word:
-                word = random.choice(list(Lexicon()[intToGrammar()[results_queue.qsize()]].values()))
-            print(f"{str(current.note)}: {word}")
-            results_queue.put(word)
+        # if triggered:
+        #     word = Lexicon()[intToGrammar()[results_queue.qsize()]].get(current.note)
+        #     if not word:
+        #         word = random.choice(list(Lexicon()[intToGrammar()[results_queue.qsize()]].values()))
+        #     print(f"{str(current.note)}: {word}")
+        #     results_queue.put(word)
 
-            if results_queue.qsize() > 4:
-                # print("The sentence is: ", results_queue)
-                return
+        #     if results_queue.qsize() > 4:
+        #         # print("The sentence is: ", results_queue)
+        #         return
 
         # print("Try grunting twice in a row. I heard it's how zombie's start their sentences.")
         # communication_queue.put("Try grunting twice in a row. I heard it's how zombie's start their sentences.")
@@ -130,9 +133,9 @@ def listener(results_queue: Queue, communication_queue: Optional[Queue] = None):
 
         # count = count_obj_instances(history, current)
         # if count >= 2:
+        # #     triggered = True
+        # if current.volume > TRIGGER_THRESHOLD:
         #     triggered = True
-        if current.volume > TRIGGER_THRESHOLD:
-            triggered = True
             # print("The note ", current.note, " was played ", count, " times")
             # TRIGGERED
 
@@ -176,7 +179,7 @@ if __name__ == "__main__":
     # for i in range(5):
     #     results.put(AudioData(50, Note("C", 3, 130.81)))
 
-    start()
+    # start()
     listener(results)
     # listen = Process(target=listener, args=(results,))
     # listen.start()
@@ -199,9 +202,6 @@ if __name__ == "__main__":
         #     # select a random word from the lexicon
         #     word = Lexicon()[intToGrammar()[i]].
         words.append(result)
-    # print("You said: ")
-    # print(words, "\n")
-    print("\n")
-    print("The zombie said:")
-    print(" ".join([str(word) for word in words]), "\n")
+    print("You said: ")
+    print(words, "\n")
     pause = input("Press any key to run again...")
