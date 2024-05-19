@@ -1,3 +1,4 @@
+from enum import Enum
 import pyaudio
 import numpy as np
 import torch
@@ -5,6 +6,8 @@ from dataclasses import dataclass
 # Parameters for the audio recording
 from typing import Optional
 import math
+
+from .datatypes.lexicon import *
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -25,12 +28,6 @@ stream = p.open(format=FORMAT,
                 input=True,
                 frames_per_buffer=CHUNK,
                 stream_callback=stream_callback)
-
-@dataclass
-class Note:
-    name: str
-    octave: int
-    freq: float
 
 @dataclass
 class AudioData:
@@ -93,6 +90,8 @@ def listener():
     while True:
         return_data = sound_picker()
         if return_data:
+            # call to check if audio is triggering
+            # then feed into map
             print(return_data)
 
 import multiprocessing
