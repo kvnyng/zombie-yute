@@ -125,6 +125,8 @@ D = Note("D", 3, 146.83)
 
 print("Is c greater than D?", C > D)
 
+print(Grammar.Closer.value)
+
 if __name__ == "__main__":
     print("Starting listener")
     listen = multiprocessing.Process(target=listener)

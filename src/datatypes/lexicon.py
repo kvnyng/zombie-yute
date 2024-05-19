@@ -175,12 +175,12 @@ class Closers(WordToPitch):
         )
 
 @dataclass
-class Grammar(Enum, int):
-    Opener: str = 0
-    Subject: str = 1
-    Verb: str = 2
-    Object: str = 3
-    Closer: str = 4
+class Grammar(Enum):
+    Opener = 0
+    Subject = 1
+    Verb = 2
+    Object = 3
+    Closer = 4
 
 class OpenersReverse(PitchToWord):
     def __init__(self, *args, **kwargs):
