@@ -17,8 +17,8 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-VOLUME_THRESHOLD = 50  # in dB
-TRIGGER_THRESHOLD = 60  # in dB
+VOLUME_THRESHOLD = 60  # in dB
+TRIGGER_THRESHOLD = 70  # in dB
 
 p = pyaudio.PyAudio()
 
@@ -94,6 +94,7 @@ def listener(results_queue: Queue, communication_queue: Optional[Queue] = None):
             history.pop(0)
 
         current = sound_picker()
+        # print(current.volume if current else None)
         # print(history, str(previous), str(current))
 
         # Moves on if current is none
