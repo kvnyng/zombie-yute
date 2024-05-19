@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Optional
+import multiprocessing
+from typing import Any, Optional
 from enum import Enum
 
 
@@ -38,6 +39,9 @@ class Note:
     
     def __ge__(self, other):
         return self > other or self == other
+    
+    def __hash__(self) -> int:
+        return hash((self.name, self.octave))
         
 
 @dataclass
@@ -182,6 +186,20 @@ class Grammar(Enum):
     Object = 3
     Closer = 4
 
+    def __hash__(self) -> int:
+        return hash(self.value)
+    
+class intToGrammar(dict[int, Grammar]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update({
+            0: Grammar.Opener,
+            1: Grammar.Subject,
+            2: Grammar.Verb,
+            3: Grammar.Object,
+            4: Grammar.Closer
+        })
+
 class OpenersReverse(PitchToWord):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -286,3 +304,23 @@ class ClosersReverse(PitchToWord):
                 "safe": Note("B", 4, 493.88)
             })
         )
+
+class Lexicon(dict[Grammar, WordToPitch]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update({
+            Grammar.Opener: Openers(),
+            Grammar.Subject: Subjects(),
+            Grammar.Verb: Verbs(),
+            Grammar.Object: Objects(),
+            Grammar.Closer: Closers()
+        })
+
+# class SentenceQueue(multiprocessing.Queue):
+#     def __init__(self, maxsize: int = 0, *, ctx: Any = ...) -> None:
+#         super().__init__(maxsize, ctx=ctx)
+
+#     def __str__(self) -> str:
+#         return " ".join([str(item) for item in list(self.queue)])
+
+    

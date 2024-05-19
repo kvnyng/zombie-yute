@@ -4,10 +4,10 @@ import numpy as np
 import torch
 from dataclasses import dataclass
 # Parameters for the audio recording
-from typing import Optional
+from typing import List, Optional
 import math
 
-from queue import Queue
+from multiprocessing import Queue, Process
 
 from .datatypes.lexicon import *
 
@@ -79,9 +79,13 @@ def sound_picker() -> Optional[AudioData]:
 
     return AudioData(volume, note)
 
-def listener():
+def listener(queue: Queue):
     history: list[AudioData] = [None] * 10
     previous: Optional[AudioData] = None
+
+    triggered: bool = False
+    # sentence: Queue[AudioData] = []
+
     while True:
 
         if len(history) > 5:
@@ -89,7 +93,7 @@ def listener():
 
         current = sound_picker()
         print(history, str(previous), str(current))
-        
+
         # Moves on if current is none
         if not current:
             continue
@@ -97,8 +101,15 @@ def listener():
         # Adds none, meaning no noise
         if current.volume < VOLUME_THRESHOLD:
             history.append(None)
+            previous = None
             continue
-        
+
+        if triggered:
+            queue.put(current)
+            if queue.qsize() > 6:
+                print("The sentence is: ", queue)
+                return
+             
         if current == previous:
             continue
         
@@ -107,9 +118,11 @@ def listener():
 
         count = count_obj_instances(history, current)
         if count >= 2:
-            print("Triggered")
-        
-        
+            triggered = True
+            # print("The note ", current.note, " was played ", count, " times")
+            # TRIGGERED
+
+
 def count_obj_instances(queue: list[AudioData], obj: AudioData) -> int:
     count: int = 0
     for item in queue:
@@ -117,17 +130,30 @@ def count_obj_instances(queue: list[AudioData], obj: AudioData) -> int:
             count += 1
     return count
 
+# C = Note("C", 3, 130.81)
+# D = Note("D", 3, 146.83)
 
-import multiprocessing
+# print("Is c greater than D?", C > D)
 
-C = Note("C", 3, 130.81)
-D = Note("D", 3, 146.83)
-
-print("Is c greater than D?", C > D)
-
-print(Grammar.Closer.value)
+# print(Grammar.Closer.value)
 
 if __name__ == "__main__":
-    print("Starting listener")
-    listen = multiprocessing.Process(target=listener)
-    listen.start()
+    # print("Starting listener")
+    results = Queue()
+    for i in range(5):
+        results.put(AudioData(50, Note("C", 3, 130.81)))
+
+    # listen = Process(target=listener, args=(results,))
+    # listen.start()
+    # listen.join()
+    
+    print("The sentence is: ", results)
+
+    for i in range(results.qsize()):
+        result = results.get()
+        print(result)
+        print(Verbs())
+        print(Verbs()[result.note])
+        # print("Reading from: ", intToGrammar()[i])
+        # # print(Lexicon()[intToGrammar()[i]])
+        # print(Lexicon()[intToGrammar()[i]][result.note])
