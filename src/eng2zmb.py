@@ -5,10 +5,7 @@ import torch
 import time
 from dotenv import load_dotenv
 import os
-
-
-
-
+from .datatypes.lexicon import *
 
 
 
@@ -66,7 +63,7 @@ try:
             "content": [
                 {
                 "type": "text",
-                "text": "I will provide you a dictionary. They are specifically words of a venacular from Toronto. You will NOT take into consideration, the meaning. You will NOT use words not present in the dictionary. In the event you can NOT figure out the word, pick a word from the dictionary to fill it's place. You will have the same number of words in the output as in the input, UNLESS the output has words that represent compound words/phrases.  The output MUST result in 5 words. No punctation, no capital letters. You will try to take my input sentence and format it  based on sound, to the words in my dictionary. For example, You Don't Know, becomes You Dun Know. Dictionary: Whazzgood Hol’up Yo Nah-fam Straight-up Real talk Wagwan We out here Slime Fam Big Man Mandem Bredrin Plug Ting Galdem Ends Whip Cheese Drip Water Brains We Dawg Homie Is runnin link holla Whippin chirpin’ flexin’ Catch-a-vibe Settle Run Skrrt Swerve Run up Chop Mash up Could gyat Whip 6ix Cheese Slime Yute Ting Drip Food Watah Raps Gwop Block Piff G Ends Deadass No cap Facts Bless up Boom Safe Trust On god Say less You dun know Clapped On job]"
+                "text": "I will provide you a dictionary. They are specifically words of a venacular from Toronto. You will NOT take into consideration, the meaning. You will NOT use words not present in the dictionary. In the event you can NOT figure out the word, pick a word from the dictionary to fill it's place. You will have the same number of words in the output as in the input, UNLESS the output has words that represent compound words/phrases.  The output MUST result in 5 words. No punctation, no capital letters. Format the output as a python list. You will try to take my input sentence and format it  based on sound, to the words in my dictionary. For example, You Don't Know, becomes You Dun Know. Dictionary: Whazzgood Hol’up Yo Nah-fam Straight-up Real talk Wagwan We out here Slime Fam Big Man Mandem Bredrin Plug Ting Galdem Ends Whip Cheese Drip Water Brains We Dawg Homie Is runnin link holla Whippin chirpin’ flexin’ Catch-a-vibe Settle Run Skrrt Swerve Run up Chop Mash up Could gyat Whip 6ix Cheese Slime Yute Ting Drip Food Watah Raps Gwop Block Piff G Ends Deadass No cap Facts Bless up Boom Safe Trust On god Say less You dun know Clapped On job]"
                 }
             ]
             },
@@ -88,6 +85,9 @@ try:
         )
         # Torontoed Text!
         print(response.choices[0].message.content)
+        toronto_text = response.choices[0].message.content
+        OpenersReverse()[toronto_text[1]]
+        
 
 
         # Sleep for a while to simulate real-time processing (optional)
