@@ -7,30 +7,42 @@ from dotenv import load_dotenv
 import os
 from .datatypes.lexicon import *
 
-def toronto_conversion():
-    ZombieNotes = []
-    try:
-        ZombieNotes.append(OpenersReverse()[toronto_text[0]])
-    except KeyError:
-        ZombieNotes.append(OpenersReverse()["whazzgood"])
-    try:
-        ZombieNotes.append(SubjectsReverse()[toronto_text[1]])
-    except KeyError:
-        ZombieNotes.append(SubjectsReverse()["fam"])
-    try:
-        ZombieNotes.append(VerbsReverse()[toronto_text[2]])
-    except KeyError:
-        ZombieNotes.append(VerbsReverse()["holla"])
-    try:
-        ZombieNotes.append(ObjectsReverse()[toronto_text[3]]) 
-    except KeyError:
-        ZombieNotes.append(ObjectsReverse()["cheese"])
-    try:
-        ZombieNotes.append(ClosersReverse()[toronto_text[4]])
-    except KeyError:
-        ZombieNotes.append(ClosersReverse()["clapped"])
-    print(ZombieNotes,"This is Zombie Notes")
+print("\033[H\033[J", end="")
+print("Welcome to Zombie Translator(ENG to ZMB)")
+print("The apocalypse is here. The zombies are coming. You are the last hope of humanity.")
+print("You, having perfect pitch have realized that zombies speak in musical grunts.")
+print("Interested in their language, you've created a translator in an attempt to communicate with them.")
+print("Especially for the Toronto Zombies, speak into the mic with Toronto Slang, and we will do our best to translate.")
+print("")
+
+def string_to_list(input_string):
+    # Remove the surrounding square brackets
+    input_string = input_string.strip('[]')
+    
+    # Split the string by ', ' and remove the single quotes
+    list_elements = [element.strip().strip("'") for element in input_string.split(',')]
+    
+    return list_elements
+
 ZombieNotes = []  # Define ZombieNotes list in a global scope
+def toronto_conversion():
+#    print(toronto_text[0])
+    for i in range(len(toronto_text)):
+        if toronto_text[i] in list(OpenersReverse().keys()):
+            ZombieNotes.append(OpenersReverse()[toronto_text[i]])
+        elif toronto_text[i] in SubjectsReverse().keys():
+            ZombieNotes.append(SubjectsReverse()[toronto_text[i]])
+        elif toronto_text[i] in VerbsReverse().keys():
+            ZombieNotes.append(VerbsReverse()[toronto_text[i]])
+        elif toronto_text[i] in ObjectsReverse().keys():
+            ZombieNotes.append(ObjectsReverse()[toronto_text[i]])
+        elif toronto_text[i] in ClosersReverse().keys():
+            ZombieNotes.append(ClosersReverse()[toronto_text[i]])
+        else:
+            print("Error: Word not found in dictionary, utilizing placeholder!")
+            ZombieNotes.append(OpenersReverse()["whazzgood"])
+#    print(toronto_text)
+# ZombieNotes = []  # Define ZombieNotes list in a global scope
 
         
 
@@ -61,6 +73,8 @@ print("Listening...")
 # Initialize a buffer to hold audio data
 audio_buffer = np.zeros(BUFFER_SIZE * CHUNK, dtype=np.float32)
 
+#print("-----", OpenersReverse()["whazzgood"])
+#print(ObjectsReverse())
 try:
     while True:
         OpenersReverse()
@@ -109,13 +123,32 @@ try:
         presence_penalty=0
         )
         # Torontoed Text!
-        toronto_text = response.choices[0].message.content
-        print(toronto_text)
+#        print(response.choices)
+ #       print(response.choices[0].message.content)
+        try:
+
+            toronto_text = string_to_list(response.choices[0].message.content)
+        except:
+            print("Error: No text found")
+#        print(toronto_text)
         toronto_conversion()
+#        print("Zombie Text: ", ZombieNotes)
+#        print(ZombieNotes[0])
+        # Play Audio
+        from playsound import playsound
+        
+        playsound(ZombieNotes[0])
+        playsound(ZombieNotes[1])
+        playsound(ZombieNotes[2])
+        playsound(ZombieNotes[3])  
+        playsound(ZombieNotes[4])
+        print("Run Again for More Translations")
+
         break
+    
 
 
-        # Sleep for a while to simulate real-time processing (optional)
+            # Sleep for a while to simulate real-time processing (optional)
         # time.sleep(BUFFER_SIZE_SECONDS)
 
 except KeyboardInterrupt:
