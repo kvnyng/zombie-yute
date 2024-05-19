@@ -63,6 +63,10 @@ class WordToPitch(dict[Note, str]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+class PitchToWord(dict[str, Note]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 class Openers(WordToPitch):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -169,9 +173,114 @@ class Closers(WordToPitch):
         )
 
 @dataclass
-class Grammar(Enum):
+class Grammar(Enum, int):
     Opener: str = 0
     Subject: str = 1
     Verb: str = 2
     Object: str = 3
     Closer: str = 4
+
+class OpenersReverse(PitchToWord):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update(
+            PitchToWord({
+                "Whazzgood": Note("C", 3, 130.81),
+                "Hol’up": Note("D", 3, 146.83),
+                "Yo": Note("E", 3, 164.81),
+                "Nah-fam": Note("F", 3, 174.61),
+                "Straight-up": Note("G", 3, 185),
+                "Real talk": Note("A", 3, 220),
+                "Wagwan": Note("B", 3, 246.93),
+                "We out here": Note("C", 4, 261.63),
+                "Slime": Note("D", 4, 293.66)
+            })
+        )
+
+class SubjectsReverse(PitchToWord):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update(
+            PitchToWord({
+                "Fam": Note("C", 3, 130.81),
+                "Big Man": Note("D", 3, 146.83),
+                "Mandem": Note("E", 3, 164.81),
+                "Bredrin": Note("F", 3, 174.61),
+                "Plug": Note("G", 3, 185),
+                "Ting": Note("A", 3, 220),
+                "Galdem": Note("B", 3, 246.93),
+                "Ends": Note("C", 4, 261.63),
+                "Whip": Note("D", 4, 293.66),
+                "Cheese": Note("E", 4, 329.63),
+                "Drip": Note("F", 4, 349.23),
+                "Water": Note("G", 4, 369.99),
+                "Brains": Note("A", 4, 440),
+                "We": Note("B", 4, 493.88)
+            })
+        )
+
+class VerbsReverse(PitchToWord):
+    def __int__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update(
+            PitchToWord({
+                "Link": Note("C", 3, 130.81),
+                "Holla": Note("D", 3, 146.83),
+                "Whippin": Note("E", 3, 164.81),
+                "Chirpin’": Note("F", 3, 174.61),
+                "Flexin’": Note("G", 3, 185),
+                "Catch-a-vibe": Note("A", 3, 220),
+                "Settle": Note("B", 3, 246.93),
+                "Run": Note("C", 4, 261.63),
+                "Skrrt": Note("D", 4, 293.66),
+                "Swerve": Note("E", 4, 329.63),
+                "Run up": Note("F", 4, 349.23),
+                "Chop": Note("G", 4, 369.99),
+                "Mash up": Note("A", 4, 440),
+                "Could": Note("B", 4, 493.88)
+            })
+        )
+
+class ObjectsReverse(PitchToWord):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update(
+            PitchToWord({
+                "Gwop": Note("C", 3, 130.81),
+                "Piff": Note("D", 3, 146.83),
+                "Block": Note("E", 3, 164.81),
+                "6ix": Note("F", 3, 174.61),
+                "Food": Note("G", 3, 185),
+                "Yute": Note("A", 3, 220),
+                "Slime": Note("B", 3, 246.93),
+                "Cheese": Note("C", 4, 261.63),
+                "Whip": Note("D", 4, 293.66),
+                "G": Note("E", 4, 329.63),
+                "Ends": Note("F", 4, 349.23),
+                "Ting": Note("G", 4, 369.99),
+                "Drip": Note("A", 4, 440),
+                "Watah": Note("B", 4, 493.88)
+            })
+        )
+        
+class ClosersReverse(PitchToWord):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update(
+            PitchToWord({
+                "Deadass": Note("C", 3, 130.81),
+                "No cap": Note("D", 3, 146.83),
+                "Facts": Note("E", 3, 164.81),
+                "Bless up": Note("F", 3, 174.61),
+                "Boom": Note("G", 3, 185),
+                "Safe": Note("A", 3, 220),
+                "Trust": Note("B", 3, 246.93),
+                "On god": Note("C", 4, 261.63),
+                "Say less": Note("D", 4, 293.66),
+                "You dun know": Note("E", 4, 329.63),
+                "Clapped": Note("F", 4, 349.23),
+                "On job": Note("G", 4, 369.99),
+                "Bless up": Note("A", 4, 440),
+                "Safe": Note("B", 4, 493.88)
+            })
+        )
