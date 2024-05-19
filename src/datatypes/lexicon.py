@@ -222,7 +222,7 @@ class SubjectsReverse(PitchToWord):
         )
 # Look for sytax errors in the following code
 class VerbsReverse(PitchToWord):
-    def __int__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
