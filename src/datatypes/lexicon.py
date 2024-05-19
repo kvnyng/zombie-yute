@@ -278,7 +278,7 @@ class ObjectsReverse(PitchToWord):
                 "gwop": "data/C3.mp3",
                 "piff": "data/D3.mp3",
                 "block": "data/E3.mp3",
-                "6ix": "data/F3.mp3",
+                "six": "data/F3.mp3",
                 "food": "data/G3.mp3",
                 "yute": "data/A3.mp3",
                 "slime": "data/B3.mp3",
