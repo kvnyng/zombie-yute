@@ -79,7 +79,7 @@ def sound_picker() -> Optional[AudioData]:
 
     return AudioData(volume, note)
 
-def listener(queue: Queue):
+def listener(results_queue: Queue, communication_queue: Queue):
     history: list[AudioData] = [None] * 10
     previous: Optional[AudioData] = None
 
@@ -87,12 +87,11 @@ def listener(queue: Queue):
     # sentence: Queue[AudioData] = []
 
     while True:
-
         if len(history) > 5:
             history.pop(0)
 
         current = sound_picker()
-        print(history, str(previous), str(current))
+        # print(history, str(previous), str(current))
 
         # Moves on if current is none
         if not current:
@@ -105,11 +104,13 @@ def listener(queue: Queue):
             continue
 
         if triggered:
-            queue.put(current)
-            if queue.qsize() > 6:
-                print("The sentence is: ", queue)
+            results_queue.put(current)
+            if results_queue.qsize() > 5:
+                # print("The sentence is: ", results_queue)
                 return
-             
+
+        communication_queue.put("Try grunting twice in a row. I heard it's how zombie's start their sentences.")
+
         if current == previous:
             continue
         
@@ -140,20 +141,27 @@ def count_obj_instances(queue: list[AudioData], obj: AudioData) -> int:
 if __name__ == "__main__":
     # print("Starting listener")
     results = Queue()
-    for i in range(5):
-        results.put(AudioData(50, Note("C", 3, 130.81)))
+    # for i in range(5):
+    #     results.put(AudioData(50, Note("C", 3, 130.81)))
 
-    # listen = Process(target=listener, args=(results,))
-    # listen.start()
-    # listen.join()
+    listen = Process(target=listener, args=(results,))
+    listen.start()
+    listen.join()
     
-    print("The sentence is: ", results)
+    # print("The sentence is: ", results)
 
-    for i in range(results.qsize()):
+    words = []
+    print("The queue size is: ", results.qsize())
+    for i in range(results.qsize()-1):
         result = results.get()
         print(result)
-        print(Verbs())
-        print(Verbs()[result.note])
         # print("Reading from: ", intToGrammar()[i])
         # # print(Lexicon()[intToGrammar()[i]])
-        # print(Lexicon()[intToGrammar()[i]][result.note])
+        word = Lexicon()[intToGrammar()[i]].get(result.note)
+        if word:
+            words.append(word)
+        # else:
+        #     # select a random word from the lexicon
+        #     word = Lexicon()[intToGrammar()[i]].
+        #     words.append(word)
+    print(words)
