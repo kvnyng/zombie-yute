@@ -3,21 +3,67 @@ from typing import Optional
 from enum import Enum
 
 
+class NoteOrder(dict[str, int]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.update({
+            "C": 0,
+            "C#": 1,
+            "D": 2,
+            "D#": 3,
+            "E": 4,
+            "F": 5,
+            "F#": 6,
+            "G": 7,
+            "G#": 8,
+            "A": 9,
+            "A#": 10,
+            "B": 11
+        })
+
 @dataclass
 class Note:
     name: str
     octave: int
     freq: float
 
+    def __gt__(self, other):
+        if self.octave > other.octave:
+            return True
+        elif self.octave == other.octave:
+            return NoteOrder()[self.name] > NoteOrder()[other.name]
+    
+    def __eq__(self, other):
+        return self.octave == other.octave and self.name == other.name
+    
+    def __ge__(self, other):
+        return self > other or self == other
+        
+
+@dataclass
+class AudioData:
+    volume: float
+    note: Note
+
+    def __str__(self):
+        return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}: {self.note.freq}Hz"
+    
+    def __repr__(self) -> str:
+        return f"{self.note.name}{self.note.octave}"
+    
+    def __gt__(self, other):
+        return self.note > other.note
+
+    def __eq__(self, other):
+        if not isinstance(other, AudioData):
+            return False
+        return self.note == other.note
+
 class WordToPitch(dict[Note, str]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class PitchToWord(dict[str, Note]):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-    
-class Lexicon(dict[Grammar, str]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -129,12 +175,12 @@ class Closers(WordToPitch):
         )
 
 @dataclass
-class Grammar(WordToPitch, int):
-    Opener: Openers = 0
-    Subject: Subjects = 1
-    Verb: Verbs = 2
-    Object: Objects = 3
-    Closer: Closers = 4
+class Grammar(Enum, int):
+    Opener: str = 0
+    Subject: str = 1
+    Verb: str = 2
+    Object: str = 3
+    Closer: str = 4
 
 class OpenersReverse(PitchToWord):
     def __init__(self, *args, **kwargs):

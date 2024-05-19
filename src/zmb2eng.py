@@ -7,13 +7,15 @@ from dataclasses import dataclass
 from typing import Optional
 import math
 
+from queue import Queue
+
 from .datatypes.lexicon import *
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-VOLUME_THRESHOLD = 40  # in dB
+VOLUME_THRESHOLD = 50  # in dB
 
 p = pyaudio.PyAudio()
 
@@ -28,14 +30,6 @@ stream = p.open(format=FORMAT,
                 input=True,
                 frames_per_buffer=CHUNK,
                 stream_callback=stream_callback)
-
-@dataclass
-class AudioData:
-    volume: float
-    note: Note
-
-    def __str__(self):
-        return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}: {self.note.freq}Hz"
 
 def freq_to_note(freq) -> Note:
     notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
@@ -86,15 +80,50 @@ def sound_picker() -> Optional[AudioData]:
     return AudioData(volume, note)
 
 def listener():
-    global return_data
+    history: list[AudioData] = [None] * 10
+    previous: Optional[AudioData] = None
     while True:
-        return_data = sound_picker()
-        if return_data:
-            # call to check if audio is triggering
-            # then feed into map
-            print(return_data)
+
+        if len(history) > 5:
+            history.pop(0)
+
+        current = sound_picker()
+        print(history, str(previous), str(current))
+        
+        # Moves on if current is none
+        if not current:
+            continue
+        
+        # Adds none, meaning no noise
+        if current.volume < VOLUME_THRESHOLD:
+            history.append(None)
+            continue
+        
+        if current == previous:
+            continue
+        
+        history.append(current)
+        previous = current
+
+        count = count_obj_instances(history, current)
+        if count >= 2:
+            print("Triggered")
+        
+        
+def count_obj_instances(queue: list[AudioData], obj: AudioData) -> int:
+    count: int = 0
+    for item in queue:
+        if item == obj:
+            count += 1
+    return count
+
 
 import multiprocessing
+
+C = Note("C", 3, 130.81)
+D = Note("D", 3, 146.83)
+
+print("Is c greater than D?", C > D)
 
 if __name__ == "__main__":
     print("Starting listener")
