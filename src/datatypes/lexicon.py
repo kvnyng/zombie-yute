@@ -42,6 +42,12 @@ class Note:
     
     def __hash__(self) -> int:
         return hash((self.name, self.octave))
+    
+    def __str__(self) -> str:
+        return f"{self.name}{self.octave}"
+    
+    def __repr__(self) -> str:
+        return f"{self.name}{self.octave}"
         
 
 @dataclass
@@ -49,10 +55,13 @@ class AudioData:
     volume: float
     note: Note
 
-    def __str__(self):
-        return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}: {self.note.freq}Hz"
-    
+    # def __str__(self):
+    #     return f"Volume: {self.volume}, Note: {self.note.name}{self.note.octave}: {self.note.freq}Hz"
+
     def __repr__(self) -> str:
+        return f"{self.note.name}{self.note.octave}"
+    
+    def __str__(self) -> str:
         return f"{self.note.name}{self.note.octave}"
     
     def __gt__(self, other):
@@ -83,8 +92,8 @@ class Openers(WordToPitch):
                 Note("G", 3, 185): "Straight-up",
                 Note("A", 3, 220): "Real talk",
                 Note("B", 3, 246.93): "Wagwan",
-                Note("C", 4, 261.63): "We out here",
-                Note("D", 4, 293.66): "Slime"
+                Note("C", 2, 261.63): "We out here",
+                Note("D", 2, 293.66): "Slime"
             })
         )
 
@@ -102,13 +111,13 @@ class Subjects(WordToPitch):
                 Note("G", 3, 185): "Plug",
                 Note("A", 3, 220): "Ting",
                 Note("B", 3, 246.93): "Galdem",
-                Note("C", 4, 261.63): "Ends",
-                Note("D", 4, 293.66): "Whip",
-                Note("E", 4, 329.63): "Cheese",
-                Note("F", 4, 349.23): "Drip",
-                Note("G", 4, 369.99): "Water",
-                Note("A", 4, 440): "Brains",
-                Note("B", 4, 493.88): "We"
+                Note("C", 2, 261.63): "Ends",
+                Note("D", 2, 293.66): "Whip",
+                Note("E", 2, 329.63): "Cheese",
+                Note("F", 2, 349.23): "Drip",
+                Note("G", 2, 369.99): "Water",
+                Note("A", 2, 440): "Brains",
+                Note("B", 2, 493.88): "We"
             })
         )
 
@@ -117,6 +126,13 @@ class Verbs(WordToPitch):
         super().__init__(*args, **kwargs)
         self.update(
             WordToPitch({
+                Note("C", 2, 261.63): "Run",
+                Note("D", 2, 293.66): "Skrrt",
+                Note("E", 2, 329.63): "Swerve",
+                Note("F", 2, 349.23): "Run up",
+                Note("G", 2, 369.99): "Chop",
+                Note("A", 2, 440): "Mash up",
+                Note("B", 2, 493.88): "Could",
                 Note("C", 3, 130.81): "Link",
                 Note("D", 3, 146.83): "Holla",
                 Note("E", 3, 164.81): "Whippin",
@@ -124,13 +140,6 @@ class Verbs(WordToPitch):
                 Note("G", 3, 185): "Flexin’",
                 Note("A", 3, 220): "Catch-a-vibe",
                 Note("B", 3, 246.93): "Settle",
-                Note("C", 4, 261.63): "Run",
-                Note("D", 4, 293.66): "Skrrt",
-                Note("E", 4, 329.63): "Swerve",
-                Note("F", 4, 349.23): "Run up",
-                Note("G", 4, 369.99): "Chop",
-                Note("A", 4, 440): "Mash up",
-                Note("B", 4, 493.88): "Could"
             })
         )
 
@@ -146,13 +155,13 @@ class Objects(WordToPitch):
                 Note("G", 3, 185): "Food",
                 Note("A", 3, 220): "Yute",
                 Note("B", 3, 246.93): "Slime",
-                Note("C", 4, 261.63): "Cheese",
-                Note("D", 4, 293.66): "Whip",
-                Note("E", 4, 329.63): "G",
-                Note("F", 4, 349.23): "Ends",
-                Note("G", 4, 369.99): "Ting",
-                Note("A", 4, 440): "Drip",
-                Note("B", 4, 493.88): "Watah"
+                Note("C", 2, 261.63): "Cheese",
+                Note("D", 2, 293.66): "Whip",
+                Note("E", 2, 329.63): "G",
+                Note("F", 2, 349.23): "Ends",
+                Note("G", 2, 369.99): "Ting",
+                Note("A", 2, 440): "Drip",
+                Note("B", 2, 493.88): "Watah"
             })
         )
 
@@ -168,13 +177,13 @@ class Closers(WordToPitch):
                 Note("G", 3, 185): "Boom",
                 Note("A", 3, 220): "Safe",
                 Note("B", 3, 246.93): "Trust",
-                Note("C", 4, 261.63): "On god",
-                Note("D", 4, 293.66): "Say less",
-                Note("E", 4, 329.63): "You dun know",
-                Note("F", 4, 349.23): "Clapped",
-                Note("G", 4, 369.99): "On job",
-                Note("A", 4, 440): "Bless up",
-                Note("B", 4, 493.88): "Safe"
+                Note("C", 2, 261.63): "On god",
+                Note("D", 2, 293.66): "Say less",
+                Note("E", 2, 329.63): "You dun know",
+                Note("F", 2, 349.23): "Clapped",
+                Note("G", 2, 369.99): "On job",
+                Note("A", 2, 440): "Bless up",
+                Note("B", 2, 493.88): "Safe"
             })
         )
 
