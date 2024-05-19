@@ -187,15 +187,15 @@ class OpenersReverse(PitchToWord):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
-                "whazzgood": Note("C", 3, 130.81),
-                "hol’up": Note("D", 3, 146.83),
-                "yo": Note("E", 3, 164.81),
-                "nah-fam": Note("F", 3, 174.61),
-                "straight-up": Note("G", 3, 185),
-                "real talk": Note("A", 3, 220),
-                "wagwan": Note("B", 3, 246.93),
-                "we out here": Note("C", 4, 261.63),
-                "slime": Note("D", 4, 293.66)
+                "whazzgood": "data/C3.mp3",
+                "hol’up": "data/D3.mp3",
+                "yo": "data/E3.mp3",
+                "nah-fam": "data/F3.mp3",
+                "straight-up": "data/G3.mp3",
+                "real talk": "data/A3.mp3",
+                "wagwan": "data/B3.mp3",
+                "we out here": "data/C4.mp3",
+                "slime": "data/D4.mp3"
             })
         )
 
@@ -204,42 +204,42 @@ class SubjectsReverse(PitchToWord):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
-                "fam": Note("C", 3, 130.81),
-                "big Man": Note("D", 3, 146.83),
-                "mandem": Note("E", 3, 164.81),
-                "bredrin": Note("F", 3, 174.61),
-                "plug": Note("G", 3, 185),
-                "ting": Note("A", 3, 220),
-                "galdem": Note("B", 3, 246.93),
-                "ends": Note("C", 4, 261.63),
-                "whip": Note("D", 4, 293.66),
-                "cheese": Note("E", 4, 329.63),
-                "drip": Note("F", 4, 349.23),
-                "water": Note("G", 4, 369.99),
-                "brains": Note("A", 4, 440),
-                "we": Note("B", 4, 493.88)
+                "fam": "data/C3.mp3",
+                "big Man": "data/D3.mp3",
+                "mandem": "data/E3.mp3",
+                "bredrin": "data/F3.mp3",
+                "plug": "data/G3.mp3",
+                "ting": "data/A3.mp3",
+                "galdem": "data/B3.mp3",
+                "ends": "data/C4.mp3",
+                "whip": "data/D4.mp3",
+                "cheese": "data/E4.mp3",
+                "drip": "data/F4.mp3",
+                "water": "data/G4.mp3",
+                "brains": "data/A4.mp3",
+                "we": "data/B4.mp3"
             })
         )
-
+# Look for sytax errors in the following code
 class VerbsReverse(PitchToWord):
     def __int__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
-                "link": Note("C", 3, 130.81),
-                "holla": Note("D", 3, 146.83),
-                "whippin": Note("E", 3, 164.81),
-                "chirpin’": Note("F", 3, 174.61),
-                "flexin’": Note("G", 3, 185),
-                "catch-a-vibe": Note("A", 3, 220),
-                "settle": Note("B", 3, 246.93),
-                "run": Note("C", 4, 261.63),
-                "skrrt": Note("D", 4, 293.66),
-                "swerve": Note("E", 4, 329.63),
-                "run up": Note("F", 4, 349.23),
-                "chop": Note("G", 4, 369.99),
-                "mash up": Note("A", 4, 440),
-                "could": Note("B", 4, 493.88)
+                "link": "data/C3.mp3",
+                "holla": "data/D3.mp3",
+                "whippin": "data/E3.mp3",
+                "chirpin’": "data/F3.mp3",
+                "flexin’": "data/G3.mp3",
+                "catch-a-vibe": "data/A3.mp3",
+                "settle": "data/B3.mp3",
+                "run": "data/C4.mp3",
+                "skrrt": "data/D4.mp3",
+                "swerve": "data/E4.mp3",
+                "run up": "data/F4.mp3",
+                "chop": "data/G4.mp3",
+                "mash up": "data/A4.mp3",
+                "could": "data/B4.mp3"
             })
         )
 
@@ -248,20 +248,20 @@ class ObjectsReverse(PitchToWord):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
-                "gwop": Note("C", 3, 130.81),
-                "piff": Note("D", 3, 146.83),
-                "block": Note("E", 3, 164.81),
-                "6ix": Note("F", 3, 174.61),
-                "food": Note("G", 3, 185),
-                "yute": Note("A", 3, 220),
-                "slime": Note("B", 3, 246.93),
-                "cheese": Note("C", 4, 261.63),
-                "whip": Note("D", 4, 293.66),
-                "g": Note("E", 4, 329.63),
-                "ends": Note("F", 4, 349.23),
-                "ting": Note("G", 4, 369.99),
-                "drip": Note("A", 4, 440),
-                "watah": Note("B", 4, 493.88)
+                "gwop": "data/C3.mp3",
+                "piff": "data/D3.mp3",
+                "block": "data/E3.mp3",
+                "6ix": "data/F3.mp3",
+                "food": "data/G3.mp3",
+                "yute": "data/A3.mp3",
+                "slime": "data/B3.mp3",
+                "cheese": "data/C4.mp3",
+                "whip": "data/D4.mp3",
+                "g": "data/E4.mp3",
+                "ends": "data/F4.mp3",
+                "ting": "data/G4.mp3",
+                "drip": "data/A4.mp3",
+                "watah": "data/B4.mp3"
             })
         )
         
@@ -270,19 +270,19 @@ class ClosersReverse(PitchToWord):
         super().__init__(*args, **kwargs)
         self.update(
             PitchToWord({
-                "deadass": Note("C", 3, 130.81),
-                "no cap": Note("D", 3, 146.83),
-                "facts": Note("E", 3, 164.81),
-                "bless up": Note("F", 3, 174.61),
-                "boom": Note("G", 3, 185),
-                "safe": Note("A", 3, 220),
-                "trust": Note("B", 3, 246.93),
-                "on god": Note("C", 4, 261.63),
-                "say less": Note("D", 4, 293.66),
-                "you dun know": Note("E", 4, 329.63),
-                "clapped": Note("F", 4, 349.23),
-                "on job": Note("G", 4, 369.99),
-                "bless up": Note("A", 4, 440),
-                "safe": Note("B", 4, 493.88)
+            "deadass": "data/C3.mp3",
+            "no cap": "data/D3.mp3",
+            "facts": "data/E3.mp3",
+            "bless up": "data/F3.mp3",
+            "boom": "data/G3.mp3",
+            "safe": "data/A3.mp3",
+            "trust": "data/B3.mp3",
+            "on god": "data/C4.mp3",
+            "say less": "data/D4.mp3",
+            "you dun know": "data/E4.mp3",
+            "clapped": "data/F4.mp3",
+            "on job": "data/G4.mp3",
+            "bless up": "data/A4.mp3",
+            "safe": "data/B4.mp3"
             })
         )

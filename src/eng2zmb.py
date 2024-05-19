@@ -7,8 +7,32 @@ from dotenv import load_dotenv
 import os
 from .datatypes.lexicon import *
 
+def toronto_conversion():
+    ZombieNotes = []
+    try:
+        ZombieNotes.append(OpenersReverse()[toronto_text[0]])
+    except KeyError:
+        ZombieNotes.append(OpenersReverse()["whazzgood"])
+    try:
+        ZombieNotes.append(SubjectsReverse()[toronto_text[1]])
+    except KeyError:
+        ZombieNotes.append(SubjectsReverse()["fam"])
+    try:
+        ZombieNotes.append(VerbsReverse()[toronto_text[2]])
+    except KeyError:
+        ZombieNotes.append(VerbsReverse()["holla"])
+    try:
+        ZombieNotes.append(ObjectsReverse()[toronto_text[3]]) 
+    except KeyError:
+        ZombieNotes.append(ObjectsReverse()["cheese"])
+    try:
+        ZombieNotes.append(ClosersReverse()[toronto_text[4]])
+    except KeyError:
+        ZombieNotes.append(ClosersReverse()["clapped"])
+    print(ZombieNotes,"This is Zombie Notes")
+ZombieNotes = []  # Define ZombieNotes list in a global scope
 
-
+        
 
 # Load the Whisper model
 model = whisper.load_model("base")
@@ -39,6 +63,7 @@ audio_buffer = np.zeros(BUFFER_SIZE * CHUNK, dtype=np.float32)
 
 try:
     while True:
+        OpenersReverse()
         # Read audio data from the stream
         for i in range(BUFFER_SIZE):
             data = stream.read(CHUNK)
@@ -84,10 +109,10 @@ try:
         presence_penalty=0
         )
         # Torontoed Text!
-        print(response.choices[0].message.content)
         toronto_text = response.choices[0].message.content
-        OpenersReverse()[toronto_text[1]]
-        
+        print(toronto_text)
+        toronto_conversion()
+        break
 
 
         # Sleep for a while to simulate real-time processing (optional)
